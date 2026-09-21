@@ -7,6 +7,8 @@ const menu = document.querySelector(".menu")
 const recipes=document.querySelector(".recipes")
 const aboutrecipe=document.querySelector(".aboutrecipe")
 
+const categories=document.querySelector(".categorie-menu")
+
 //saving bookmark in local storage
 function SaveBookmark(recipe){
     let Savedrecipe=JSON.parse(localStorage.getItem("bookmarks"));
@@ -108,7 +110,8 @@ function showrecipedetails(element){
         star.classList.add("saved");
     }
 
-    star.addEventListener("click", ()=>{
+    star.addEventListener("click", (event)=>{
+        event.stopPropagation();
         if(isBookmarked(element)){
             RemoveBookmark(element);
             star.classList.remove("saved");
@@ -139,8 +142,8 @@ function showrecipedetails(element){
 
     backbutton.addEventListener("click", ()=>{
         aboutrecipe.style.display="none";
-        recipes.style.display="grid";              
-    })
+        recipes.style.display="grid";
+    });
 
 }
 
@@ -175,7 +178,7 @@ function RemoveBookmark(element){
     if(savedrecipe===null){
         return;
     }
-    savedrecipe=savedrecipe.some(item=>item.idMeal!==element.idMeal);
+    savedrecipe=savedrecipe.filter(item=>item.idMeal!==element.idMeal);
     localStorage.setItem("bookmarks", JSON.stringify(savedrecipe));
 }
 
@@ -190,15 +193,69 @@ function isBookmarked(element){
 }
 
 search.addEventListener("click", ()=>{
+    if(searchbox.value.trim()===""){
+        alert("Enter the Item");
+        return;
+    }
     getData();
 })  
 
 bookmark.addEventListener("click", ()=>{
     recipes.innerHTML="";
-
+    if(!isBookmarked){
+        recipes.innerHTML="There is no Bookmarks yet!"
+    }
     aboutrecipe.style.display="none";
     recipes.style.display="grid";
     
     getBookmarks();
 })
 
+//random item
+
+async function randomitem(recipe){
+
+    const url=`https://www.themealdb.com/api/json/v1/1/random.php`;
+    const response=await fetch(url);
+    const data=await response.json();
+
+    const randomIndex=Math.floor(Math.random()*data.meals.length);
+    const randomrecipe=data.meals[randomIndex];
+    recipes.innerHTML="";
+    recipes.classList.add("random-layout");
+    createrecipecard(randomrecipe);
+
+}
+
+random.addEventListener("click", ()=>{
+    randomitem();
+})
+
+//categories
+
+async function getcategories(){
+    recipes.innerHTML = "";
+    categories.innerHTML="";
+
+    const url= "https://www.themealdb.com/api/json/v1/1/categories.php";
+    const response=await fetch(url);
+    const data=await response.json();
+    
+    data.categories.forEach((category) => {
+        const li=document.createElement("li");
+        li.classList.add("li");
+        li.textContent=category.strCategory;
+        console.log(li.textContent);
+        categories.appendChild(li)
+    })
+    console.log(data);
+}
+
+menu.addEventListener("click", ()=>{
+    if(categories.style.display==="block"){
+        categories.style.display="none";
+    }else{
+        getcategories();
+        categories.style.display="block";
+    }
+})

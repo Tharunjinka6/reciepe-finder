@@ -62,7 +62,6 @@ button:hover{
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     width: 100%;
-    border: 2px solid black;
     margin-top: 20px;
     gap: 20px;
 }
@@ -79,10 +78,12 @@ button:hover{
     align-items: center;
     justify-content: center;
     border-radius: 5px;
+    text-align: center;
 }
 .recipe-name{
     margin-top:0px;
     margin-bottom: 3px;
+    text-align: center;
 }
 .aboutrecipe{
     display: none;
@@ -128,4 +129,46 @@ button:hover{
 .star-icon.saved{
     color: gold;
     text-shadow: 0 0 10px gold;
+}
+
+.categorie-menu{
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    width: 180px;
+    padding: 8px;
+    margin: 10px 0 0 0;
+    list-style: none;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.categorie-menu li{
+    padding: 8px;
+    border-radius: 10px;
+}
+
+.categorie-menu li:hover{
+    background-color: orange;
+    color: white;
+    transition: 0.07s;
+}
+.button-menucontainer{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin: 0 auto;
+    align-items: flex-end;
+}
+
+.recipes.random-layout{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ 
+}
+
+.recipes.random-layout .recipe-card{
+    width: 300px;
 }
